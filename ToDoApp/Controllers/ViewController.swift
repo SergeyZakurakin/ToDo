@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
     //MARK: - Private properties
     
-    private let itemArray = ["33", "44", "32"]
+    private var itemArray = ["33", "44", "32"]
     
     
     //MARK: - Setup UI
@@ -65,7 +65,8 @@ class ViewController: UIViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { action in
             // what will happen when User click to Add Item
-            print("alert")
+            self.itemArray.append(textField.text!)
+            self.tableView.reloadData()
         }
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "Create New Item"
