@@ -13,6 +13,7 @@
 		DC9327F92C4FBB3A00AA7822 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC9327F82C4FBB3A00AA7822 /* Assets.xcassets */; };
 		DC9327FC2C4FBB3A00AA7822 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = DC9327FB2C4FBB3A00AA7822 /* Base */; };
 		DC9328082C4FE7EA00AA7822 /* ToDoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9328072C4FE7EA00AA7822 /* ToDoViewCell.swift */; };
+		DC93280A2C52DF4900AA7822 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9328092C52DF4900AA7822 /* Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		DC9327FB2C4FBB3A00AA7822 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC9327FD2C4FBB3A00AA7822 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC9328072C4FE7EA00AA7822 /* ToDoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewCell.swift; sourceTree = "<group>"; };
+		DC9328092C52DF4900AA7822 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,10 +60,10 @@
 			children = (
 				DC9328032C4FE2B400AA7822 /* Application */,
 				DC9328042C4FE2CA00AA7822 /* Controllers */,
-				DC9327F82C4FBB3A00AA7822 /* Assets.xcassets */,
-				DC9327FA2C4FBB3A00AA7822 /* LaunchScreen.storyboard */,
+				DC93280B2C52DF5100AA7822 /* Model */,
+				DC93280C2C52E01500AA7822 /* Suporting Files */,
 				DC9327FD2C4FBB3A00AA7822 /* Info.plist */,
-				DC9328072C4FE7EA00AA7822 /* ToDoViewCell.swift */,
+				DC93280D2C52E04700AA7822 /* Views */,
 			);
 			path = ToDoApp;
 			sourceTree = "<group>";
@@ -81,6 +83,31 @@
 				DC9327F32C4FBB3800AA7822 /* ViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		DC93280B2C52DF5100AA7822 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DC9328092C52DF4900AA7822 /* Item.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DC93280C2C52E01500AA7822 /* Suporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DC9327F82C4FBB3A00AA7822 /* Assets.xcassets */,
+				DC9327FA2C4FBB3A00AA7822 /* LaunchScreen.storyboard */,
+			);
+			path = "Suporting Files";
+			sourceTree = "<group>";
+		};
+		DC93280D2C52E04700AA7822 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DC9328072C4FE7EA00AA7822 /* ToDoViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,6 +180,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC93280A2C52DF4900AA7822 /* Item.swift in Sources */,
 				DC9327F42C4FBB3800AA7822 /* ViewController.swift in Sources */,
 				DC9327F02C4FBB3800AA7822 /* AppDelegate.swift in Sources */,
 				DC9328082C4FE7EA00AA7822 /* ToDoViewCell.swift in Sources */,
@@ -226,7 +254,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -283,7 +311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

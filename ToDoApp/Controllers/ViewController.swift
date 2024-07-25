@@ -11,7 +11,9 @@ final class ViewController: UIViewController {
     
     //MARK: - Private properties
     
-    private var itemArray = ["33", "44", "32"]
+    private var itemArray = [Item]()
+    
+    let defaults = UserDefaults.standard
     
     
     //MARK: - Setup UI
@@ -40,11 +42,26 @@ final class ViewController: UIViewController {
             action: #selector(addButtonTapped)
         )
         
+        
         navigationItem.rightBarButtonItem = addButton
         title = "TO DO"
         view.addSubview(tableView)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "toDoItemCell")
+        
+        
+        let newItem = Item()
+        newItem.title = "Mike"
+        itemArray.append(newItem)
+        
+//        DispatchQueue.global(qos: .background).async {
+//            if self.defaults.array(forKey: "ToDoListArray") is [String] {
+//                DispatchQueue.main.async {
+//                    self.itemArray.append(newItem)
+//                    self.tableView.reloadData()
+//                }
+//            }
+//        }
     }
     
     
@@ -63,10 +80,21 @@ final class ViewController: UIViewController {
         
         let alert = UIAlertController(title: "Add New ToDo Item", message: "", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add Item", style: .default) { action in
-            // what will happen when User click to Add Item
-            self.itemArray.append(textField.text!)
-            self.tableView.reloadData()
+        let action = UIAlertAction(title: "Add Item", style: .default) { [weak self] action in
+            
+            guard let self else { return }
+            // what will happen when User click to Add Item "ToDoListArray"
+            
+            let newItem = Item()
+            newItem.title = textField.text!
+            
+            itemArray.append(newItem)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+//            DispatchQueue.global(qos: .background).async {
+//            }
+            
+            tableView.reloadData()
         }
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "Create New Item"
@@ -108,7 +136,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
   
 //        let model = itemArray[indexPath.row]
 //        cell.configure(model)
