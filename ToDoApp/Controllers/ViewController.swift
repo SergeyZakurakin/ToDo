@@ -54,14 +54,13 @@ final class ViewController: UIViewController {
         newItem.title = "Mike"
         itemArray.append(newItem)
         
-//        DispatchQueue.global(qos: .background).async {
-//            if self.defaults.array(forKey: "ToDoListArray") is [String] {
-//                DispatchQueue.main.async {
-//                    self.itemArray.append(newItem)
-//                    self.tableView.reloadData()
-//                }
-//            }
-//        }
+        let newItem2 = Item()
+        newItem2.title = "Buy"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Jack"
+        itemArray.append(newItem3)
     }
     
     
@@ -87,12 +86,9 @@ final class ViewController: UIViewController {
             
             let newItem = Item()
             newItem.title = textField.text!
-            
             itemArray.append(newItem)
             
             self.defaults.set(self.itemArray, forKey: "ToDoListArray")
-//            DispatchQueue.global(qos: .background).async {
-//            }
             
             tableView.reloadData()
         }
@@ -136,8 +132,20 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row].title
+        let item = itemArray[indexPath.row]
+        
+        
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
   
+//        if item.done == true {
+//            cell.accessoryType = .checkmark
+//        } else {
+//            cell.accessoryType = .none
+//        }
+        
+        
 //        let model = itemArray[indexPath.row]
 //        cell.configure(model)
         
@@ -147,11 +155,25 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        print(itemArray[indexPath.row])
         
+        
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
+//        if itemArray[indexPath.row].done == false {
+//            itemArray[indexPath.row].done = true
+//        } else {
+//            itemArray[indexPath.row].done = false
+//        }
+        
+        
+        
+        
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         } else {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
+        
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
