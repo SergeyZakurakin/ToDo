@@ -6,24 +6,37 @@
 //
 
 import UIKit
+import CoreData
 
 final class ViewController: UIViewController {
+    
+    
+    
+    
     
     //MARK: - Private properties
     
     private var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
-    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
+        
     
     //MARK: - Setup UI
     private let tableView = UITableView()
+    private let searchBar = UISearchBar()
+    
+    
 
     
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        let dataFilePath = FileManager.default.urls(for: documentDirectory, in: userDomainMask).first?.appendingPathComponent("Item.plist")
+        
+        
         
         setupViews()
         setupConstraints()
@@ -34,6 +47,7 @@ final class ViewController: UIViewController {
     
     //MARK: - Setup Views
     private func setupViews() {
+        
         view.backgroundColor = .cyan
         
         let addButton = UIBarButtonItem(
@@ -43,24 +57,18 @@ final class ViewController: UIViewController {
         )
         
         
+        
+        
+        
         navigationItem.rightBarButtonItem = addButton
         title = "TO DO"
+        
         view.addSubview(tableView)
+        view.addSubview(searchBar)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "toDoItemCell")
         
-        
-        let newItem = Item()
-        newItem.title = "Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Buy"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Jack"
-        itemArray.append(newItem3)
+        loadItems()
     }
     
     
@@ -70,6 +78,7 @@ final class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        searchBar.delegate = self
     }
     
     //MARK: - Actions
@@ -83,15 +92,18 @@ final class ViewController: UIViewController {
             
             guard let self else { return }
             // what will happen when User click to Add Item "ToDoListArray"
+                    
             
-            let newItem = Item()
+            let newItem = Item(context: context)
             newItem.title = textField.text!
+            newItem.done = false
             itemArray.append(newItem)
             
-            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            saveItems()
             
-            tableView.reloadData()
+            
         }
+        
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "Create New Item"
             textField = alertTextField
@@ -101,6 +113,27 @@ final class ViewController: UIViewController {
         
     }
     
+    //MARK: - private Methods
+    private func saveItems() {
+        
+        do {
+            
+            try context.save()
+        } catch {
+            print("error saving context \(error)")
+            
+        }
+        tableView.reloadData()
+    }
+    
+    
+    private func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fecthing data from context \(error)")
+        }
+    }
     
 }
 
@@ -112,9 +145,14 @@ extension ViewController {
     
     private func setupConstraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -134,9 +172,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         
         let item = itemArray[indexPath.row]
         
-        
         cell.textLabel?.text = item.title
-        
         cell.accessoryType = item.done ? .checkmark : .none
   
 //        if item.done == true {
@@ -144,19 +180,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 //        } else {
 //            cell.accessoryType = .none
 //        }
-        
-        
-//        let model = itemArray[indexPath.row]
-//        cell.configure(model)
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(itemArray[indexPath.row])
-        
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveItems()
         
 //        if itemArray[indexPath.row].done == false {
 //            itemArray[indexPath.row].done = true
@@ -164,24 +194,34 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 //            itemArray[indexPath.row].done = false
 //        }
         
-        
-        
-        
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-        
-        tableView.reloadData()
-        
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+//MARK: - UISearchBar methods
+extension ViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+        loadItems(with: request)
+        
+        print(searchBar.text!)
     }
     
     
-    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
     
 }
-
 
 
